@@ -5,7 +5,7 @@ import { useAuth } from '../context/AuthContext';
 import { useTransactions } from '../context/TransactionContext';
 import * as storage from '../utils/storage';
 import TransactionList from '../components/TransactionList';
-import DeviceInfo from '../modules/DeviceInfo';
+import DeviceInfo from 'react-native-device-info';
 
 const HomeScreen = () => {
     const { signOut } = useAuth();
@@ -23,16 +23,18 @@ const HomeScreen = () => {
             }
         };
 
-        const fetchDeviceInfo = async () => {
-            try {
-                const battery = await DeviceInfo.getBatteryLevel();
-                const network = await DeviceInfo.getNetworkType();
-                setBatteryLevel(battery);
-                setNetworkType(network);
-            } catch (e) {
-                console.error('DeviceInfo Error', e);
-            }
-        };
+      const fetchDeviceInfo = async () => {
+  try {
+    const battery = await DeviceInfo.getBatteryLevel(); // 0 - 1
+   
+
+    setBatteryLevel(Math.round(battery * 100)); // %
+   
+  } catch (error) {
+    console.log('Device info error:', error);
+  }
+};
+
 
         fetchExpiry();
         fetchDeviceInfo();
